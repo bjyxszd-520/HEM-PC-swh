@@ -95,7 +95,7 @@ int main(int argc, char* argv[]) {
 	uint64_t totalRules = 0;
 	uint64_t totalMessages = 0;
 
-	const string file_path = "./HEM_AFBS.txt";
+	// const string file_path = "./HEM_AFBS.txt";
 	string content;
 
 	//for (int dno = 0; dno < numDataSets; dno++)
