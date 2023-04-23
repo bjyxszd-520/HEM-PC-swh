@@ -37,6 +37,7 @@ class HEMBS // bitsets search
 	std::vector<std::vector<std::pair<uint32_t,uint32_t>>> rleCode[HEM_BS_NUM_ATTR]; // Run Length Encoding
 
 	void aggregate_forward_aggbitsets_delete_IPv4(uint64_t unit, unsigned long long& aggUnit, const uint32_t ofi, uint64_t aggOffsetMask);
+    void aggregate_backward_aggbitsets_delete_IPv4(uint64_t unit, unsigned long long& aggUnit, const uint32_t ofi, uint64_t aggOffsetMask);
 
  public:
 	HEMBS();
@@ -55,6 +56,11 @@ class HEMBS // bitsets search
 	void aggregate_forward_bitsets_insert_IPv4(const rule* r);
 	void aggregate_forward_bitsets_delete_IPv4(const rule* r);
 	std::array<uint64_t, 5> aggregate_forward_bitsets_search_IPv4(const message* m, const rule* rules, uint32_t& matchRuleNo);
+
+	void aggregate_backward_init_bitsets_IPv4(uint32_t numRule);
+	void aggregate_backward_bitsets_insert_IPv4(const rule* r);
+	void aggregate_backward_bitsets_delete_IPv4(const rule* r);
+	std::array<uint64_t, 5> aggregate_backward_bitsets_search_IPv4(const message* m, const rule* rules, uint32_t& matchRuleNo);
 
 	void RLE_forward_init_bitsets_IPv4(uint32_t numRule);
 	void RLE_forward_bitsets_insert_IPv4(const rule* r);

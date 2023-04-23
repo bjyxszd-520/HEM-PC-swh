@@ -12,6 +12,8 @@ double get_nano_time(struct timespec* a, struct timespec* b) {
 	return (b->tv_sec - a->tv_sec) * 1000000000 + b->tv_nsec - a->tv_nsec;
 }
 
+
+
 int main(int argc, char* argv[]) {
 	ACL_rules* acl_rules = new ACL_rules;
 	ACL_messages* messages = new ACL_messages;
@@ -83,6 +85,7 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
+
 	double totalConstructionTimeMs = 0.0;
 	double totalAvgSearchTimeUs = 0.0;
 	double totalAvgUpdateTimeUs = 0.0;
@@ -106,10 +109,10 @@ int main(int argc, char* argv[]) {
 
 	clock_t clk = clock();
 	HEMBS hem_afbs;
-	hem_afbs.aggregate_forward_init_bitsets_IPv4(acl_rules->size);
+	hem_afbs.aggregate_backward_init_bitsets_IPv4(acl_rules->size);
 
 	for (int i = 0; i < acl_rules->size; i++)
-		hem_afbs.aggregate_forward_bitsets_insert_IPv4(acl_rules->list + i);
+		hem_afbs.aggregate_backward_bitsets_insert_IPv4(acl_rules->list + i);
 
 	double constructionTimeMs = (double)(clock() - clk) * 1000.0 / CLOCKS_PER_SEC;
 	totalConstructionTimeMs += constructionTimeMs;
@@ -135,15 +138,17 @@ int main(int argc, char* argv[]) {
 		aggFail += debugInfo[4];
 #else
 		clock_gettime(CLOCK_REALTIME, &t1);
-		hem_afbs.aggregate_forward_bitsets_search_IPv4(messages->list + i, acl_rules->list, ruleNo);
+		hem_afbs.aggregate_backward_bitsets_search_IPv4(messages->list + i, acl_rules->list, ruleNo);
 		clock_gettime(CLOCK_REALTIME, &t2);
 		double t_search_time = get_nano_time(&t1, &t2);
 		search_time += t_search_time;
-		fprintf(output_fp, "%f um\n", t_search_time / 1000.0);
+		fprintf(output_fp, "%f\n", t_search_time / 1000.0);
 #endif
-#if VERIFICATION
-		
-#endif
+		if (messages->list[i].rule_id != ruleNo)
+		{
+			printf("Error result: msg %u matches rule %u while the result is %u\n", i, messages->list[i].rule_id, ruleNo);
+			exit(0);
+		}
 	}
 	fclose(output_fp);
 	//double avgSearchTimeUs = (double)(clock() - clk) * 1000000.0 / CLOCKS_PER_SEC / messages->size;
